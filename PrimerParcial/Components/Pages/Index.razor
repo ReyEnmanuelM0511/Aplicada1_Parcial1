@@ -8,10 +8,10 @@
 
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-center mb-4">
-            <h3 class="card-title"> Historial de Prestamos</h3>
+            <h3 class="card-title"> Registro de Autores</h3>
 
-            <a href="/crearPrestamo" class="btn btn-primary">
-                <span class="bi bi-plus-square mt-3"></span>Agregar Estudiante
+            <a href="/crearAutor" class="btn btn-primary">
+                <span class="bi bi-plus-square mt-3"></span>Agregar Autor
             </a>
 
         </div>
@@ -42,8 +42,11 @@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="ValorFiltro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Estudiante">Estudiante</option>
-                        <option value="Titulo">T&iacute;tulo</option>
+                        <option value="Nombre">Nombre</option>
+                        <option value="Nacionalidad">Nacionalidad</option>
+                        <option value="FechaNacimiento">FechaNacimiento</option>
+                        <option value="Sueldo">Sueldo</option>
+
                     </InputSelect>
                 </div>
 
@@ -51,7 +54,7 @@
                 <div class="input-group">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi -search" @onclick="Buscar"> Buscar</button>
+                        <button type="button" class="btn btn-outline-primary bi bi -search"> Buscar</button>
                     </div>
                 </div>
 
@@ -64,7 +67,7 @@
         </div>
 
         <div class="card-footer d-flex justify-content-between align-center mb-4">
-            <label>Cantidad:  @prestamos.Count()</label>
+            <label>Cantidad:  @autores.Count()</label>
         </div>
 
     </div>
@@ -74,5 +77,8 @@
 
 
 @code {
-    
+    private string? ValorFiltro { get; set; }
+    private string? filtro { get; set; }
+
+    private List<Autores> autores = new List<Autores>();
 }
