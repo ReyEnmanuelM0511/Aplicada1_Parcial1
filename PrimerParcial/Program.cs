@@ -1,10 +1,20 @@
 using PrimerParcial.Components;
+using PrimerParcial.Services;
+using PrimerParcial.Context;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+var ConStr = builder.Configuration.GetConnectionString("ConStr");
+
+builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
+
+builder.Services.AddScoped<AutoresServices>();
+
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
