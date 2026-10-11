@@ -1,8 +1,8 @@
-﻿@page "/counter"
+﻿@page "/crearAutor"
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
-<EditForm Model="autores">
+<EditForm Model="autores" OnValidSubmit="Guardar">
     <DataAnnotationsValidator/>
 
     <div class="container">
@@ -48,7 +48,7 @@
             </div>
 
             <div class="card-footer text-center mt-2">
-                <a href="/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <a href="/autoresIndex" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
                 <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
             </div>
         </div>
@@ -59,7 +59,7 @@
 @code {
     private Autores autores = new Autores();
 
-    public string Mensaje { get; set; }
+    public string Mensaje { get; set; } = string.Empty;
 
     private async Task Guardar()
     {
