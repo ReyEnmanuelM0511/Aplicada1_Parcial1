@@ -46,6 +46,7 @@
                         <option value="Nacionalidad">Nacionalidad</option>
                         <option value="FechaNacimiento">FechaNacimiento</option>
                         <option value="Sueldo">Sueldo</option>
+                        <option value="IdAutor">IdAutor</option>
 
                     </InputSelect>
                 </div>
@@ -54,18 +55,27 @@
                 <div class="input-group">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi -search"> Buscar</button>
+                        <button type="button" class="btn btn-outline-primary bi bi -search" @onclick="Buscar"> Buscar</button>
                     </div>
                 </div>
 
             </div>
 
             <div class="grid mt-3">
-               
+               <QuickGrid Items="@autores.AsQueryable()">
+                   <PropertyColumn TGridItem="PrimerParcial.Models.Autores" TProp="int" Property="@(a => a.IdAutor)" title="Id" Sortable="true"/>
+                   <PropertyColumn Property="@(a => a.Nombre)" title="Nombre" Sortable="true"/>
+                   <PropertyColumn Property="@(a => a.Nacionalidad)" title="Nacionalidad" Sortable="true"/>
+                   <PropertyColumn Property="@(a => a.FechaNacimiento)" title="FechaNacimiento" Sortable="true"/>
+                   <PropertyColumn Property="@(a => a.Sueldo)" title="Sueldo" Sortable="true"/>
+                   <TemplateColumn Title="Acciones">
+                       <a href="@($"/modificar/{@context.IdAutor}")" class="btn btn-primary bi bi-pencil-square"></a>
+                   </TemplateColumn>
+               </QuickGrid>
             </div>
-
         </div>
 
+        @*footer*@
         <div class="card-footer d-flex justify-content-between align-center mb-4">
             <label>Cantidad:  @autores.Count()</label>
         </div>
@@ -79,6 +89,66 @@
 @code {
     private string? ValorFiltro { get; set; }
     private string? filtro { get; set; }
+    private Autores autor = new();
 
     private List<Autores> autores = new List<Autores>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        autores = await AutorS.GetList(a => true);
+    }
+
+    private async Task Eliminar()
+    {
+        bool eliminado = await AutorS.Eliminar(autor.IdAutor);
+
+        if (eliminado)
+        {
+            autores = await AutorS.GetList(a => true);
+            toastServices.ShowSuccess("Autor eliminado correctamente");
+        }
+        else
+        {
+            toastServices.ShowError("Error al eliminar al autor del registro");
+        }
+    }
+
+    private async Task Buscar()
+    {
+        if(ValorFiltro == "")
+        {
+            autores = await AutorS.GetList(a => true);
+        }
+        else if (ValorFiltro.Trim() != "" & ValorFiltro == "Nombre")
+        {
+            autores = await AutorS.GetList(a => a.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+
+        } 
+        else if (ValorFiltro.Trim() != "" & ValorFiltro == "Nacionalidad")
+        {
+            autores = await AutorS.GetList(a => a.Nacionalidad.ToLower().Contains(ValorFiltro.ToLower()));
+        }
+        else if (ValorFiltro == "FechaNacimiento")
+        {
+            if(DateOnly.TryParse(ValorFiltro, out DateOnly anio))
+            {
+                autores = await AutorS.GetList(a => a.FechaNacimiento == anio);
+            }
+        }
+        else if (ValorFiltro == "Sueldo")
+        {
+            if(double.TryParse(ValorFiltro, out double sueldo))
+            {
+                autores = await AutorS.GetList(a => a.Sueldo == sueldo);
+            }
+        }
+        else if(ValorFiltro == "IdAutor")
+        {
+            if(int.TryParse(ValorFiltro, out int id))
+            {
+                autores = await AutorS.GetList(a => a.IdAutor == id);
+            }
+        }
+    }
 }
+ 
