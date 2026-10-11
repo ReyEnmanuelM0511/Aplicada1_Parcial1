@@ -15,7 +15,7 @@ public class Autores
     public string? Nacionalidad { get; set; }
 
     [Required(ErrorMessage = "Este campo es obligatorio")]
-    public int FechaNacimiento { get; set; }
+    public DateOnly FechaNacimiento { get; set; }
 
     [Required(ErrorMessage = "Este campo es obligatorio")]
     public double Sueldo { get; set; }
