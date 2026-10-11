@@ -1,7 +1,7 @@
-﻿@page "/prestamoIndex"
+﻿@page "/autoresIndex"
 @rendermode InteractiveServer
 
-<PageTitle>Historial de Prestamos</PageTitle>
+<PageTitle>Historial de Autores</PageTitle>
 
 
 <div class="container">
@@ -78,11 +78,11 @@
         @*footer*@
         <div class="card-footer d-flex justify-content-between align-center mb-4">
             <label>Cantidad:  @autores.Count()</label>
+            <Label>Total Sueldos: @Suma()</Label>
         </div>
-
     </div>
-
 </div>
+
 
 
 
@@ -119,7 +119,7 @@
         {
             autores = await AutorS.GetList(a => true);
         }
-        else if (ValorFiltro.Trim() != "" & ValorFiltro == "Nombre")
+        else if (ValorFiltro?.Trim() != "" & ValorFiltro == "Nombre")
         {
             autores = await AutorS.GetList(a => a.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
 
@@ -149,6 +149,21 @@
                 autores = await AutorS.GetList(a => a.IdAutor == id);
             }
         }
+    }
+
+    private double Suma ()
+    {
+        double suma = 0;
+
+        foreach(var Autor in autores)
+        {
+            if(Autor.Sueldo > 0)
+            {
+                suma += Autor.Sueldo;
+            }
+        }
+
+        return suma;
     }
 }
  
