@@ -69,7 +69,7 @@
                    <PropertyColumn Property="@(a => a.FechaNacimiento)" title="FechaNacimiento" Sortable="true"/>
                    <PropertyColumn Property="@(a => a.Sueldo)" title="Sueldo" Sortable="true"/>
                    <TemplateColumn Title="Acciones">
-                       <a href="@($"/modificar/{@context.IdAutor}")" class="btn btn-primary bi bi-pencil-square"></a>
+                       <a href="@($"/modificarAutor/{@context.IdAutor}")" class="btn btn-primary bi bi-pencil-square"></a>
                    </TemplateColumn>
                </QuickGrid>
             </div>
