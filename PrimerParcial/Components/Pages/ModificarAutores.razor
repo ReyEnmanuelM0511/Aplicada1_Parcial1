@@ -3,7 +3,7 @@
 
 <PageTitle>Weather</PageTitle>
 <EditForm Model="autor" OnValidSubmit="Modificar">
-    <DataAnnotationsValidator/>
+    <DataAnnotationsValidator />
 
     <div class="container">
         <div class="card shadow-lg">
@@ -74,13 +74,13 @@
 @code {
     [Parameter]
     public int IdAutor { get; set; }
-    
+
     private Autores autor { get; set; } = new Autores();
 
     protected override async Task OnInitializedAsync()
     {
         var autorEncontrado = await AutorS.Buscar(IdAutor);
-        if(autorEncontrado != null)
+        if (autorEncontrado != null)
         {
             autor = autorEncontrado;
         }
@@ -116,4 +116,3 @@
         }
     }
 }
-    
