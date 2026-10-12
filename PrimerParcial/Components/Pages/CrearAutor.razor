@@ -1,0 +1,82 @@
+﻿@page "/crearAutor"
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+<EditForm Model="autores" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title mt-2">Registrar</h5>
+            </div>
+
+            <div class="card-body">
+                @*AutoresId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Id del autor</strong></Label>
+                    <InputNumber class="form-control" @bind-Value="autores.IdAutor"></InputNumber>
+                </div>
+
+                @*Nombre autor*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre del autor</strong></label>
+                    <InputText class="form-control" @bind-Value="autores.Nombre"></InputText>
+                    <ValidationMessage For="() => autores.Nombre"></ValidationMessage>
+                </div>
+
+                @*Nacionalidad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nacionalidad del autor</strong></label>
+                    <InputText class="form-control" @bind-Value="autores.Nacionalidad"></InputText>
+                    <ValidationMessage For="() => autores.Nacionalidad"></ValidationMessage>
+                </div>
+
+                @*Fecha de Nacimiento*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Fecha de nacimiento</strong></label>
+                    <InputDate class="form-control" @bind-Value="autores.FechaNacimiento"></InputDate>
+                    <ValidationMessage For="() => autores.FechaNacimiento"></ValidationMessage>
+                </div>
+
+                @*Sueldo de autor*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Sueldo del autor</strong></label>
+                    <InputNumber class="form-control" @bind-Value="autores.Sueldo"></InputNumber>
+                    <ValidationMessage For="() => autores.Sueldo"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/autoresIndex" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@Mensaje
+
+@code {
+    private Autores autores = new Autores();
+
+    public string Mensaje { get; set; } = string.Empty;
+
+    private async Task Guardar()
+    {
+        bool creado = await AutorS.Guardar(autores);
+
+        if (creado)
+        {
+            toastServices.ShowSuccess("El autor ha sido agregado correctamente");
+            navigationManager.NavigateTo("/autoresIndex");
+        } 
+        else if(AutorS.Buscar(autores.IdAutor) != null)
+        {
+            toastServices.ShowError("El autor ya existe en el registro");
+        }
+        else
+        {
+            toastServices.ShowError("Error al agregar al Autor");
+        }
+    }
+}

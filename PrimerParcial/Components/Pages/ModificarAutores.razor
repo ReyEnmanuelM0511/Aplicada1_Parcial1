@@ -1,0 +1,118 @@
+﻿@page "/modificarAutor/{IdAutor:int}"
+@rendermode InteractiveServer
+
+<PageTitle>Weather</PageTitle>
+<EditForm Model="autor" OnValidSubmit="Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h3 class="card-title">Modificar Autor</h3>
+            </div>
+
+            <div class="card-body">
+                @*IdAutor*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Id del Autor</strong></label>
+                    <InputNumber class="form-control" @bind-Value="autor.IdAutor"></InputNumber>
+                </div>
+                @*Nombre del autor*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre del autor</strong></label>
+                    <InputText class="form-control" @bind-Value="autor.Nombre"></InputText>
+                </div>
+
+                @*Nacionalidad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nacionalidad del autor</strong></label>
+                    <InputText class="form-control" @bind-Value="autor.Nacionalidad"></InputText>
+                </div>
+
+                @*Fecha de Nacimiento*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Fecha de nacimiento</strong></label>
+                    <InputDate class="form-control" @bind-Value="autor.FechaNacimiento"></InputDate>
+                </div>
+
+                @*Sueldo*@
+                <div class="mb-3">
+                    <label class="form-control"><strong>Sueldo del autor</strong></label>
+                    <InputNumber class="form-control" @bind-Value="autor.Sueldo"></InputNumber>
+                </div>
+            </div>
+
+            @*footer*@
+            <div class="card-footer text-center mt-3">
+                <a href="/autoresIndex" class="btn btn-secondary mt-2"><span class="bi bi-arrow-left"></span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+                <button type="button" class="btn btn-danger bi bi-trash mt-2" data-bs-toggle="modal" data-bs-target="#Modal"> Eliminar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmacion para continuar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Esta seguro que desea eliminar a este autor?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int IdAutor { get; set; }
+
+    private Autores autor { get; set; } = new Autores();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var autorEncontrado = await AutorS.Buscar(IdAutor);
+        if (autorEncontrado != null)
+        {
+            autor = autorEncontrado;
+        }
+    }
+
+    private async Task Modificar()
+    {
+        bool Modificado = await AutorS.Guardar(autor);
+
+        if (Modificado)
+        {
+            toastServices.ShowSuccess("Autor modificado correctamente");
+            navigationManager.NavigateTo("/autoresIndex");
+        }
+        else
+        {
+            toastServices.ShowSuccess("Error al modificar al autor");
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        bool Eliminado = await AutorS.Eliminar(autor.IdAutor);
+
+        if (Eliminado)
+        {
+            toastServices.ShowSuccess("Autor eliminado correctamente");
+            navigationManager.NavigateTo("/autoresIndex");
+        }
+        else
+        {
+            toastServices.ShowError("Error al eliminar el autor");
+        }
+    }
+}
